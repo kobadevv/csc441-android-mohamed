@@ -68,11 +68,14 @@ fun CounterDemo() {
 fun HomeScreen(modifier: Modifier = Modifier) {
     //--- Class 7: Step 2: the list lives in state
     var languages = remember {
-        mutableStateListOf("English (native)", "Arabic (native)", "French (formal study)", "Japanese (independent study)")
+        mutableStateListOf("English", "Arabic", "French", "Japanese")
     }
 
     //--- Class 7: Step 3: what's typed lives in state ---
     var newLanguage by remember { mutableStateOf("") }
+
+    //--- Class 8: Step 2: the error message lives in state too ---
+    var error by remember { mutableStateOf<String?>(null) }
 
     //--- Class 6: Step 3: a column, so things stack ---
     Column(
@@ -112,24 +115,48 @@ fun HomeScreen(modifier: Modifier = Modifier) {
         // --- Class 7: Step 3: the text field ---
         OutlinedTextField(
             value = newLanguage,
-            onValueChange = { newLanguage = it },
+            // --- Class 8: Step 3: the field itself pushes back ---
+
+            onValueChange = {
+                newLanguage = it.take(MAX_NAME_LENGTH)
+                error = null
+            },
             label = { Text("Language name") },
+            singleLine = true,
+            isError = error != null,
             modifier = Modifier.fillMaxWidth()
         )
 
+        error?.let { errorMsg ->
+            Text(
+                text = errorMsg,
+                color = MaterialTheme.colorScheme.error,
+                fontSize = 14.sp
+            )
+        }
+
         // --- Lab 7 · Task 4: a live character counter ---
         Text(
-            text = "${newLanguage.length} / 40",
+            text = "${newLanguage.length} / ${MAX_NAME_LENGTH}",
             fontSize = 12.sp,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
         //--- Class 7: Step 4: the button changes the state ---
         Button (onClick = {
-            languages.add(newLanguage)
-            newLanguage = ""
+            //--- Class 8: Step 3: check before you add ---
 
-        }) {
+            val problem = validateLanguageName(input = newLanguage, existingLanguages = languages)
+            if (problem == null) {
+                languages.add(newLanguage)
+                newLanguage = ""
+            } else {
+                error = problem
+            }
+        },
+            // --- Class 8: Step 4: the sign on the door, not the lock ---
+            enabled = newLanguage.isNotBlank()
+            ) {
             Text("Add")
         }
 
@@ -145,7 +172,9 @@ fun HomeScreen(modifier: Modifier = Modifier) {
         // --- Lab 7 · Task 3: clear all ---
         Button(onClick = {
             languages.clear()
-        }) {
+        },
+            enabled = languages.isNotEmpty()
+            ) {
             Text("Clear all")
         }
 
@@ -169,6 +198,19 @@ fun HomeScreen(modifier: Modifier = Modifier) {
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
+    }
+}
+
+const val MAX_NAME_LENGTH = 30
+
+//--- Class 8: Step 1: one rule book for language names ---
+fun validateLanguageName(input: String, existingLanguages:List<String>): String? {
+    val name = input.trim()
+    return when {
+        name.isEmpty() -> "Enter a language"
+        name.length > MAX_NAME_LENGTH -> "Keep it to 40 characters or fewer"
+        existingLanguages.any { it.equals(name, ignoreCase = true) } -> "$name is already on the list"
+        else -> null
     }
 }
 
