@@ -13,11 +13,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -42,14 +49,38 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+//--- Class 7: Step 1: A counter that remembers
+@Composable
+fun CounterDemo() {
+    var count by remember { mutableStateOf(0) }
+//    var count = 0
+
+    Button(onClick = {
+        count++
+//        println("count is now $count")
+    }) {
+        Text(text = "Tapped $count times")
+    }
+}
+
 //--- Class 6: Step 1: my own screen ---
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier) {
+    //--- Class 7: Step 2: the list lives in state
+    var languages = remember {
+        mutableStateListOf("English (native)", "Arabic (native)", "French (formal study)", "Japanese (independent study)")
+    }
+
+    //--- Class 7: Step 3: what's typed lives in state ---
+    var newLanguage by remember { mutableStateOf("") }
+
     //--- Class 6: Step 3: a column, so things stack ---
     Column(
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier
+            .fillMaxWidth()
             .padding(24.dp)
     ) {
+//        CounterDemo()
         // --- Lab 6 · Task 3: a picture of my own ---
         Image(
             painter = painterResource(id = R.drawable.streak),
@@ -78,10 +109,57 @@ fun HomeScreen(modifier: Modifier = Modifier) {
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        Text(text = "English (native)")
-        Text(text = "Arabic (native speaker)")
-        Text(text = "French (formal study)")
-        Text(text = "Japanese (independent study)")
+        // --- Class 7: Step 3: the text field ---
+        OutlinedTextField(
+            value = newLanguage,
+            onValueChange = { newLanguage = it },
+            label = { Text("Language name") },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        // --- Lab 7 · Task 4: a live character counter ---
+        Text(
+            text = "${newLanguage.length} / 40",
+            fontSize = 12.sp,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+
+        //--- Class 7: Step 4: the button changes the state ---
+        Button (onClick = {
+            languages.add(newLanguage)
+            newLanguage = ""
+
+        }) {
+            Text("Add")
+        }
+
+        // --- Lab 7 · Task 1: remove the last item ---
+        Button(onClick = {
+            if (languages.isNotEmpty()) {
+                languages.removeAt(languages.lastIndex)
+            }
+        }) {
+            Text("Remove last")
+        }
+
+        // --- Lab 7 · Task 3: clear all ---
+        Button(onClick = {
+            languages.clear()
+        }) {
+            Text("Clear all")
+        }
+
+
+        //--- Class 7: Step 2: draw whatever is in the list ---
+        Text(
+            // --- Lab 7 · Task 2: singular and plural ---
+            text = if (languages.size == 1) "1 Language" else "${languages.size} Languages",
+            fontWeight = FontWeight.Bold
+        )
+
+        for (language in languages) {
+            Text(text = language, fontSize = 18.sp)
+        }
 
         // --- Lab 6 · Task 2: footer ---
         Spacer(modifier = Modifier.height(24.dp))
