@@ -53,8 +53,12 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun CounterDemo() {
     var count by remember { mutableStateOf(0) }
+//    var count = 0
 
-    Button(onClick = { count++ }) {
+    Button(onClick = {
+        count++
+//        println("count is now $count")
+    }) {
         Text(text = "Tapped $count times")
     }
 }
@@ -76,7 +80,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
             .fillMaxWidth()
             .padding(24.dp)
     ) {
-        CounterDemo()
+//        CounterDemo()
         // --- Lab 6 · Task 3: a picture of my own ---
         Image(
             painter = painterResource(id = R.drawable.streak),
@@ -113,6 +117,13 @@ fun HomeScreen(modifier: Modifier = Modifier) {
             modifier = Modifier.fillMaxWidth()
         )
 
+        // --- Lab 7 · Task 4: a live character counter ---
+        Text(
+            text = "${newLanguage.length} / 40",
+            fontSize = 12.sp,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+
         //--- Class 7: Step 4: the button changes the state ---
         Button (onClick = {
             languages.add(newLanguage)
@@ -122,9 +133,27 @@ fun HomeScreen(modifier: Modifier = Modifier) {
             Text("Add")
         }
 
+        // --- Lab 7 · Task 1: remove the last item ---
+        Button(onClick = {
+            if (languages.isNotEmpty()) {
+                languages.removeAt(languages.lastIndex)
+            }
+        }) {
+            Text("Remove last")
+        }
+
+        // --- Lab 7 · Task 3: clear all ---
+        Button(onClick = {
+            languages.clear()
+        }) {
+            Text("Clear all")
+        }
+
+
         //--- Class 7: Step 2: draw whatever is in the list ---
         Text(
-            text = "${languages.size} Languages",
+            // --- Lab 7 · Task 2: singular and plural ---
+            text = if (languages.size == 1) "1 Language" else "${languages.size} Languages",
             fontWeight = FontWeight.Bold
         )
 
