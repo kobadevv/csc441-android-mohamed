@@ -22,3 +22,19 @@ change but the screen didn't? 3. What does remember do? What would happen withou
 2. the variable count was updated but the screen was not because we were using a plain variable without a compose state. Composable cannot see these.
 
 3. remember ensures that when recomposing your values do not reinitialize (resetting them to their original values). Without it the value would essentially remain static.
+
+## Week 6 Friday lab
+
+- putting name.length < 3 -> "Too short — at least 3 characters" before the isEmpty() line in the when is wrong is because empty language entries are 0 characters prompting the too short message instead of the enter a language message.
+- The rule I added myself excludes entries from containing numbers. I added it because language names don't contain numbers (to my knowledge at least).
+
+| I typed | What the app did | Correct? |
+|---|---|---|
+| (nothing) | Add button greyed out | yes |
+| "   " | Add button greyed out | yes |
+| ab | Showed "Too short - at least 3 characters" | yes |
+| ThisIsAnExtremelyLongLanguageNameToTestTheCharacterLimitField | Text box cut off input at 30 characters | yes |
+| 12345 | Showed "Numbers are not allowed, letters only" | yes |
+| First Language | Accepted input, Add button enabled | yes |
+| ENGLISH | Prevented add, flagged duplicate name | yes |
+| Latin | Successfully added language to list | yes |
