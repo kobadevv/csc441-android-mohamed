@@ -25,7 +25,9 @@ change but the screen didn't? 3. What does remember do? What would happen withou
 
 ## Week 6 Friday lab
 
-- putting name.length < 3 -> "Too short — at least 3 characters" before the isEmpty() line in the when is wrong is because empty language entries are 0 characters prompting the too short message instead of the enter a language message.
+- putting name.length < 3 -> "Too short — at least 3 characters" before the isEmpty() line in the when is wrong is because empty language entries are 0 characters 
+  prompting the too short message instead of the enter a language message.
+
 - The rule I added myself excludes entries from containing numbers. I added it because language names don't contain numbers (to my knowledge at least).
 
 | I typed | What the app did | Correct? |
@@ -38,3 +40,16 @@ change but the screen didn't? 3. What does remember do? What would happen withou
 | First Language | Accepted input, Add button enabled | yes |
 | ENGLISH | Prevented add, flagged duplicate name | yes |
 | Latin | Successfully added language to list | yes |
+
+## Week 6 Wed lab
+
+- Questions: 1. After rotating, which screen were you on? 2. Were your two new items still there? 3.
+Look at how currentScreen and trails are each created in CampusAppScreen. Explain the difference in one or
+two sentences
+
+1. After rotating I was still on listScreen
+
+2. No, they were removed
+
+3. remember saves in app memory which survives recompositions however when rotating the screen everything initializes again; 
+   since this is the case, remembersaveable is used to prevent the value from resetting during initialization. 
