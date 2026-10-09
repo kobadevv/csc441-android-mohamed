@@ -59,11 +59,18 @@ fun CampusAppScreen(modifier: Modifier = Modifier) {
         "home" -> HomeScreen(
             languages = languages,
             onAddLanguage = { languages.add(it) },
-            onSeeAll = { currentScreen = "list"}
+            onSeeAll = { currentScreen = "list" },
+            // --- Lab 9 · Task 2: ... ---
+            onAbout = { currentScreen = "about"}
         )
         "list" -> ListScreen(
             languages = languages,
-            onBack = { currentScreen = "home"},
+            onBack = { currentScreen = "home" },
+            modifier = modifier
+        )
+        // --- Lab 9 · Task 2: ... ---
+        "about" -> AboutScreen(
+            onBack = { currentScreen = "home" },
             modifier = modifier
         )
     }
@@ -74,7 +81,9 @@ fun CampusAppScreen(modifier: Modifier = Modifier) {
 fun HomeScreen(
     languages: MutableList<String>,
     onAddLanguage: (String) -> Unit,
-    onSeeAll:() -> Unit,
+    onSeeAll: () -> Unit,
+    // --- Lab 9 · Task 2: ... ---
+    onAbout: () -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -192,6 +201,14 @@ fun HomeScreen(
             ) {
                 Text(text = "See all languages")
             }
+
+        // --- Lab 9 · Task 2: ... ---
+        TextButton(
+            onClick = onAbout
+
+        ) {
+            Text(text = "About")
+        }
     }
 }
 
@@ -218,13 +235,47 @@ fun ListScreen(
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
         )
+
+        Text(
+            // --- Lab 9 · Task 1: count on the list screen ---
+            text = if (languages.size == 1) "1 Language" else "${languages.size} Languages",
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+
         Spacer(modifier = Modifier.height(16.dp))
 
         for (language in languages) {
-            Text(text = language, fontSize = 18.sp)
+            Text(text = language, fontSize = 18.sp);
         }
     }
 }
+
+// --- Lab 9 · Task 2: a third screen ---
+@Composable
+fun AboutScreen(
+    onBack: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    BackHandler { onBack() }
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(24.dp)
+    ) {
+        TextButton(onClick = onBack) {
+            Text("Back")
+        }
+        Text(
+            text = "About",
+            fontSize = 28.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(text = "Language log keeps track of the languages I've learned.")
+        Text(text = "Built for CSC 441 by Mohamed.")
+    }
+}
+
 const val MAX_NAME_LENGTH = 30
 
 //--- Class 8: Step 1: one rule book for language names ---
@@ -243,11 +294,20 @@ fun validateLanguageName(input: String, existingLanguages:List<String>): String?
 }
 
 //--- Class 6: Step 2: Preview ---
+// --- Class 9 · Step 2: previews need sample data now ---
 @Preview
 @Composable
 fun HomeScreenPreview() {
-    CampusAppTheme() {
-       // HomeScreen()
+    CampusAppTheme {
+        Surface {
+            HomeScreen(
+                languages = mutableListOf("English", "Arabic", "French", "Japanese"),
+                onAddLanguage = {},
+                onSeeAll = {},
+                // --- Lab 9 · Task 2: ... ---
+                onAbout = {}
+            )
+        }
     }
 }
 
@@ -257,19 +317,26 @@ fun HomeScreenPreview() {
 fun HomeScreenDarkPreview() {
     CampusAppTheme {
         Surface {
-          //  HomeScreen()
+          HomeScreen(
+              languages = mutableListOf("English", "Arabic", "French", "Japanese"),
+              onAddLanguage = {},
+              onSeeAll = {},
+              // --- Lab 9 · Task 2: ... ---
+              onAbout = {}
+          )
         }
     }
 }
 
-//@Preview(showBackground = true)
-//@Composable
-//fun ListScreenPreview() {
-//    CampusAppTheme(
-//        val languages = remember {
-//            mutableStateListOf("English", "Arabic", "French", "Japanese")
-//        },
-//        onBack = {}
-//    )
-//}
+// --- Class 9 · Step 7: preview the list screen ---
+@Preview(showBackground = true)
+@Composable
+fun ListScreenPreview() {
+    CampusAppTheme{
+        ListScreen(
+            languages = mutableListOf("English", "Arabic", "French", "Japanese"),
+            onBack = {},
+        )
+    }
+}
 
