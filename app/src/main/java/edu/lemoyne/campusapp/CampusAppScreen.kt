@@ -3,12 +3,18 @@ package edu.lemoyne.campusapp
 import android.content.res.Configuration
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -21,6 +27,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.toMutableStateList
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -29,6 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import edu.lemoyne.campusapp.ui.theme.CampusAppTheme
+import org.intellij.lang.annotations.Language
 
 //--- Class 7: Step 1: A counter that remembers
 @Composable
@@ -48,10 +57,11 @@ fun CounterDemo() {
 
 @Composable
 fun CampusAppScreen(modifier: Modifier = Modifier) {
-    //--- Class 7: Step 2: the list lives in state
+    // --- Class 7: Step 2: the list lives in state
     val languages = remember {
-        mutableStateListOf("English", "Arabic", "French", "Japanese")
+        mutableStateListOf("English", "Arabic", "French", "Japanese", "Spanish")
     }
+
     // --- Class 9: Step 4: which screen is showing is just state ---
     var currentScreen by rememberSaveable { mutableStateOf("home") }
 
@@ -66,6 +76,8 @@ fun CampusAppScreen(modifier: Modifier = Modifier) {
         "list" -> ListScreen(
             languages = languages,
             onBack = { currentScreen = "home" },
+            // --- Class 10 · Step 4: only the owner changes the list ---
+            onRemove = { languages.remove(it) },
             modifier = modifier
         )
         // --- Lab 9 · Task 2: ... ---
@@ -217,14 +229,15 @@ fun HomeScreen(
 fun ListScreen(
     languages: List<String>,
     onBack: () -> Unit,
+    onRemove: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // --- Class 9: Step 6: the phone ---
-    BackHandler {onBack}
+    // --- Class 9: Step 6: the phones back button goes home too ---
+    BackHandler { onBack () }
     Column(
         modifier = modifier
-            .fillMaxWidth()
-            .padding(20.dp)
+            .fillMaxSize()
+            .padding(horizontal = 24.dp)
     ) {
         TextButton(onClick = onBack) {
             Text(text = "Back")
@@ -244,8 +257,48 @@ fun ListScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        for (language in languages) {
-            Text(text = language, fontSize = 18.sp);
+        if (languages.isEmpty()) {
+            Text(
+                text = "No languages yet. Add one on the home screen.",
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        } else {
+            // --- Class 10 · Step 2: a list that scrolls ---
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(languages) { language ->
+                    LanguageRow(
+                        name = language,
+                        onRemove = { onRemove(language) }
+                    )
+                }
+            }
+        }
+    }
+}
+
+// --- Class 10 · Step 3: one row, as its own Composable ---
+@Composable
+fun LanguageRow(
+    name: String,
+    onRemove: () -> Unit
+) {
+// --- Class 10 · Step 4: a remove button on every row ---
+    TextButton(onClick = onRemove) {
+        Text("Remove")
+    }
+
+    Card(modifier = Modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = name,
+                fontSize = 18.sp,
+                modifier = Modifier.weight(1f)
+            )
         }
     }
 }
@@ -336,7 +389,20 @@ fun ListScreenPreview() {
         ListScreen(
             languages = mutableListOf("English", "Arabic", "French", "Japanese"),
             onBack = {},
+            onRemove = {}
         )
     }
 }
 
+// --- Class 10 · Step 5: preview the empty case too ---
+@Preview(showBackground = true)
+@Composable
+fun ListScreenEmptyPreview() {
+    CampusAppTheme {
+        ListScreen(
+            languages = emptyList(),
+            onBack = {},
+            onRemove = {}
+        )
+    }
+}
