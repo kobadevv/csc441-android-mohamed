@@ -78,6 +78,8 @@ fun CampusAppScreen(modifier: Modifier = Modifier) {
             onBack = { currentScreen = "home" },
             // --- Class 10 · Step 4: only the owner changes the list ---
             onRemove = { languages.remove(it) },
+            // --- Lab 10 Task 2: remove all passed through owner ---
+            onRemoveAll = { languages.clear() },
             modifier = modifier
         )
         // --- Lab 9 · Task 2: ... ---
@@ -85,6 +87,7 @@ fun CampusAppScreen(modifier: Modifier = Modifier) {
             onBack = { currentScreen = "home" },
             modifier = modifier
         )
+
     }
 }
 
@@ -230,6 +233,7 @@ fun ListScreen(
     languages: List<String>,
     onBack: () -> Unit,
     onRemove: (String) -> Unit,
+    onRemoveAll: () -> Unit, // --- Lab 10 Task 2: New parameter
     modifier: Modifier = Modifier
 ) {
     // --- Class 9: Step 6: the phones back button goes home too ---
@@ -255,6 +259,13 @@ fun ListScreen(
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
+        // --- Lab 10 · Task 2: remove all, through the owner ---
+        if (languages.isNotEmpty()) {
+            TextButton(onClick = onRemoveAll) {
+                Text("Remove all")
+            }
+        }
+
         Spacer(modifier = Modifier.height(16.dp))
 
         if (languages.isEmpty()) {
@@ -262,6 +273,10 @@ fun ListScreen(
                 text = "No languages yet. Add one on the home screen.",
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
+            // --- Lab 10 · Task 1: a way out of the empty screen ---
+            TextButton(onClick = onBack) {
+                Text(text = "Back")
+            }
         } else {
             // --- Class 10 · Step 2: a list that scrolls ---
             LazyColumn(
@@ -389,7 +404,8 @@ fun ListScreenPreview() {
         ListScreen(
             languages = mutableListOf("English", "Arabic", "French", "Japanese"),
             onBack = {},
-            onRemove = {}
+            onRemove = {},
+            onRemoveAll = {}
         )
     }
 }
@@ -402,7 +418,8 @@ fun ListScreenEmptyPreview() {
         ListScreen(
             languages = emptyList(),
             onBack = {},
-            onRemove = {}
+            onRemove = {},
+            onRemoveAll = {}
         )
     }
 }
