@@ -355,7 +355,7 @@ fun validateLanguageName(input: String, existingLanguages:List<String>): String?
         name.length < 3 -> "Too short — at least 3 characters"
         // --- Lab 8 · Task 2: A rule of my own ---
         name.any { it.isDigit() } -> "Numbers are not allowed, letters only"
-        name.length > MAX_NAME_LENGTH -> "Keep it to 40 characters or fewer"
+        name.length > MAX_NAME_LENGTH -> "Keep it to 30 characters or fewer"
         existingLanguages.any { it.equals(name, ignoreCase = true) } -> "$name is already on the list"
         else -> null
     }
