@@ -127,7 +127,7 @@ fun HomeScreen(
         Spacer(modifier = Modifier.height(16.dp))
         //--- Class 6: Step 4: real styling ---
         Text(
-            text = "Language App",
+            text = "Language Log",
             fontSize = 32.sp,
             fontWeight = FontWeight.Bold
         )
@@ -369,7 +369,7 @@ fun HomeScreenPreview() {
     CampusAppTheme {
         Surface {
             HomeScreen(
-                languages = mutableListOf("English", "Arabic", "French", "Japanese"),
+                languages = mutableListOf("English", "Arabic", "French", "Japanese", "Spanish"),
                 onAddLanguage = {},
                 onSeeAll = {},
                 // --- Lab 9 · Task 2: ... ---
@@ -386,7 +386,7 @@ fun HomeScreenDarkPreview() {
     CampusAppTheme {
         Surface {
           HomeScreen(
-              languages = mutableListOf("English", "Arabic", "French", "Japanese"),
+              languages = mutableListOf("English", "Arabic", "French", "Japanese", "Spanish"),
               onAddLanguage = {},
               onSeeAll = {},
               // --- Lab 9 · Task 2: ... ---
@@ -402,7 +402,7 @@ fun HomeScreenDarkPreview() {
 fun ListScreenPreview() {
     CampusAppTheme{
         ListScreen(
-            languages = mutableListOf("English", "Arabic", "French", "Japanese"),
+            languages = mutableListOf("English", "Arabic", "French", "Japanese", "Spanish"),
             onBack = {},
             onRemove = {},
             onRemoveAll = {}
@@ -421,5 +421,14 @@ fun ListScreenEmptyPreview() {
             onRemove = {},
             onRemoveAll = {}
         )
+    }
+}
+
+// --- Checkpoint 1: About Preview ---
+@Preview(showBackground = true)
+@Composable
+fun AboutScreenPreview() {
+    CampusAppTheme {
+        AboutScreen (onBack = {})
     }
 }
