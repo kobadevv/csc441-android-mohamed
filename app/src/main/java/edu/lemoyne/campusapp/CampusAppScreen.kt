@@ -37,7 +37,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import edu.lemoyne.campusapp.ui.theme.CampusAppTheme
-import org.intellij.lang.annotations.Language
 
 //--- Class 7: Step 1: A counter that remembers
 @Composable
@@ -56,7 +55,7 @@ fun CounterDemo() {
 // --- Class 9: Step 2: one owner for the data
 
 @Composable
-fun CampusAppScreen(modifier: Modifier = Modifier) {
+fun CampusAppScreen(showcaseUIState: ShowcaseUIState, onRefresh: () -> Unit, modifier: Modifier = Modifier) {
     // --- Class 7: Step 2: the list lives in state
     val languages = remember {
         mutableStateListOf("English", "Arabic", "French", "Japanese", "Spanish")
@@ -71,7 +70,8 @@ fun CampusAppScreen(modifier: Modifier = Modifier) {
             onAddLanguage = { languages.add(it) },
             onSeeAll = { currentScreen = "list" },
             // --- Lab 9 · Task 2: ... ---
-            onAbout = { currentScreen = "about"}
+            onAbout = { currentScreen = "about"},
+            onInterestsClick = { currentScreen = "interests" }
         )
         "list" -> ListScreen(
             languages = languages,
@@ -87,7 +87,13 @@ fun CampusAppScreen(modifier: Modifier = Modifier) {
             onBack = { currentScreen = "home" },
             modifier = modifier
         )
+        "interests" -> InterestsScreen(
+            state = showcaseUIState,
+            onBack = { currentScreen = "home" },
+            onRefresh = onRefresh,
+            modifier = modifier,
 
+        )
     }
 }
 
@@ -99,7 +105,10 @@ fun HomeScreen(
     onSeeAll: () -> Unit,
     // --- Lab 9 · Task 2: ... ---
     onAbout: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    //Class 21 - Step 5: Add navigation to your EXISTING screen owner
+    // A. In the existing HomeScreen function parameters, add:
+    onInterestsClick: () -> Unit = {}
 ) {
 
     //--- Class 7: Step 3: what's typed lives in state ---
@@ -224,6 +233,9 @@ fun HomeScreen(
         ) {
             Text(text = "About")
         }
+
+        // B. In HomeScreen's Column add this button:
+        Button(onClick = onInterestsClick) { Text("My Interests") }
     }
 }
 

@@ -53,3 +53,24 @@ two sentences
 
 3. remember saves in app memory which survives recompositions however when rotating the screen everything initializes again; 
    since this is the case, remembersaveable is used to prevent the value from resetting during initialization. 
+
+## Week 13 Wed Lab 21
+1. What triggers refresh() when InterestsScreen first opens?
+
+-
+
+2. What triggers refresh() when the button is tapped?
+
+- 
+
+3. Why does InterestsScreen receive onRefresh instead of the ViewModel?
+
+- 
+
+4. What is the difference between a successful [] response and a network failure?
+
+- 
+
+5. How did you prove Android and the website use the same Supabase data?
+
+-
