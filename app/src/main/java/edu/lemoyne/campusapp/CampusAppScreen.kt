@@ -37,7 +37,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import edu.lemoyne.campusapp.ui.theme.CampusAppTheme
-import org.intellij.lang.annotations.Language
 
 //--- Class 7: Step 1: A counter that remembers
 @Composable
@@ -75,7 +74,8 @@ fun CampusAppScreen(
             onSeeAll = { currentScreen = "list" },
             onInterestsClick = { currentScreen = "interests" },
             // --- Lab 9 · Task 2: ... ---
-            onAbout = { currentScreen = "about"}
+            onAbout = { currentScreen = "about"},
+            onInterestsClick = { currentScreen = "interests" }
         )
         "list" -> ListScreen(
             languages = languages,
@@ -240,6 +240,9 @@ fun HomeScreen(
         ) {
             Text(text = "About")
         }
+
+        // B. In HomeScreen's Column add this button:
+        Button(onClick = onInterestsClick) { Text("My Interests") }
     }
 }
 
