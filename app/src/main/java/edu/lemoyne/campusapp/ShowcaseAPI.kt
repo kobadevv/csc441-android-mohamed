@@ -8,6 +8,7 @@ import retrofit2.create
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.POST
 
 interface ShowcaseAPI {
     @GET("/rest/v1/showcase_items")
@@ -16,11 +17,11 @@ interface ShowcaseAPI {
         @Header("Authorization") authorization: String
     ): List<ShowcaseItem>
 
-    @GET("auth/v1/token?grant_type=password")
-    suspend fun signIn (
+    @POST("auth/v1/token?grant_type=password")
+    suspend fun signIn(
         @Header("apikey") apiKey: String,
         @Body request: LoginRequest
-    )
+    ): LoginResponse
 }
 
 object ShowcaseService {

@@ -58,6 +58,8 @@ fun CounterDemo() {
 fun CampusAppScreen(
     showcaseUIState: ShowcaseUIState,
     onRefreshShowcase: () -> Unit,
+    loginState: LoginUIState,
+    onLogin: (String, String, () -> Unit) -> Unit,
     modifier: Modifier = Modifier) {
     // --- Class 7: Step 2: the list lives in state
     val languages = remember {
@@ -72,10 +74,9 @@ fun CampusAppScreen(
             languages = languages,
             onAddLanguage = { languages.add(it) },
             onSeeAll = { currentScreen = "list" },
-            onInterestsClick = { currentScreen = "interests" },
+            onInterestsClick = { currentScreen = "login" },
             // --- Lab 9 · Task 2: ... ---
-            onAbout = { currentScreen = "about"},
-            onInterestsClick = { currentScreen = "interests" }
+            onAbout = { currentScreen = "about"}
         )
         "list" -> ListScreen(
             languages = languages,
@@ -96,6 +97,13 @@ fun CampusAppScreen(
             onBack = { currentScreen = "home" },
             onRefresh = onRefreshShowcase,
             modifier = modifier,
+        )
+        "login" -> LoginScreen(
+            state = loginState,
+            onLogin = { email, password ->
+                onLogin(email, password) { currentScreen = "interests" }
+            },
+            modifier = modifier
         )
     }
 }
@@ -240,9 +248,6 @@ fun HomeScreen(
         ) {
             Text(text = "About")
         }
-
-        // B. In HomeScreen's Column add this button:
-        Button(onClick = onInterestsClick) { Text("My Interests") }
     }
 }
 
