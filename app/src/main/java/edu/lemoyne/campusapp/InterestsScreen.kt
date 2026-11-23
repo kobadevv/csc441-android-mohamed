@@ -25,7 +25,9 @@ fun InterestsScreen(
         onRefresh()
     }
     BackHandler { onBack() }
-    Column(modifier = modifier.fillMaxSize().padding(16.dp)) {
+    Column(modifier = modifier
+        .fillMaxSize()
+        .padding(16.dp)) {
         TextButton(onClick = onBack) { Text("Back") }
         // Lab 21: Task 1 reload when tapped
         TextButton(onClick = onRefresh) {

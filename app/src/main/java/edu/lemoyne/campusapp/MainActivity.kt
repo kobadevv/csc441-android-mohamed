@@ -59,7 +59,7 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     CampusAppScreen(
                         showcaseUIState = showcaseState,
-                        onRefresh = { showcaseViewModel::refresh },
+                        onRefreshShowcase =  showcaseViewModel::refresh,
                         modifier = Modifier.padding(innerPadding)
                     )
                 }

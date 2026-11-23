@@ -55,7 +55,10 @@ fun CounterDemo() {
 // --- Class 9: Step 2: one owner for the data
 
 @Composable
-fun CampusAppScreen(showcaseUIState: ShowcaseUIState, onRefresh: () -> Unit, modifier: Modifier = Modifier) {
+fun CampusAppScreen(
+    showcaseUIState: ShowcaseUIState,
+    onRefreshShowcase: () -> Unit,
+    modifier: Modifier = Modifier) {
     // --- Class 7: Step 2: the list lives in state
     val languages = remember {
         mutableStateListOf("English", "Arabic", "French", "Japanese", "Spanish")
@@ -69,6 +72,7 @@ fun CampusAppScreen(showcaseUIState: ShowcaseUIState, onRefresh: () -> Unit, mod
             languages = languages,
             onAddLanguage = { languages.add(it) },
             onSeeAll = { currentScreen = "list" },
+            onInterestsClick = { currentScreen = "interests" },
             // --- Lab 9 · Task 2: ... ---
             onAbout = { currentScreen = "about"},
             onInterestsClick = { currentScreen = "interests" }
@@ -90,9 +94,8 @@ fun CampusAppScreen(showcaseUIState: ShowcaseUIState, onRefresh: () -> Unit, mod
         "interests" -> InterestsScreen(
             state = showcaseUIState,
             onBack = { currentScreen = "home" },
-            onRefresh = onRefresh,
+            onRefresh = onRefreshShowcase,
             modifier = modifier,
-
         )
     }
 }
@@ -106,8 +109,6 @@ fun HomeScreen(
     // --- Lab 9 · Task 2: ... ---
     onAbout: () -> Unit,
     modifier: Modifier = Modifier,
-    //Class 21 - Step 5: Add navigation to your EXISTING screen owner
-    // A. In the existing HomeScreen function parameters, add:
     onInterestsClick: () -> Unit = {}
 ) {
 
@@ -225,6 +226,12 @@ fun HomeScreen(
             ) {
                 Text(text = "See all languages")
             }
+
+        Button(
+            onClick = onInterestsClick
+        ) {
+            Text("My Interests")
+        }
 
         // --- Lab 9 · Task 2: ... ---
         TextButton(
