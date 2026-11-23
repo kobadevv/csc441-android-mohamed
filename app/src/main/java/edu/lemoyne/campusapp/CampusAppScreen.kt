@@ -56,7 +56,10 @@ fun CounterDemo() {
 // --- Class 9: Step 2: one owner for the data
 
 @Composable
-fun CampusAppScreen(modifier: Modifier = Modifier) {
+fun CampusAppScreen(
+    showcaseUIState: ShowcaseUIState,
+    onRefreshShowcase: () -> Unit,
+    modifier: Modifier = Modifier) {
     // --- Class 7: Step 2: the list lives in state
     val languages = remember {
         mutableStateListOf("English", "Arabic", "French", "Japanese", "Spanish")
@@ -70,6 +73,7 @@ fun CampusAppScreen(modifier: Modifier = Modifier) {
             languages = languages,
             onAddLanguage = { languages.add(it) },
             onSeeAll = { currentScreen = "list" },
+            onInterestsClick = { currentScreen = "interests" },
             // --- Lab 9 · Task 2: ... ---
             onAbout = { currentScreen = "about"}
         )
@@ -87,7 +91,12 @@ fun CampusAppScreen(modifier: Modifier = Modifier) {
             onBack = { currentScreen = "home" },
             modifier = modifier
         )
-
+        "interests" -> InterestsScreen(
+            state = showcaseUIState,
+            onBack = { currentScreen = "home" },
+            onRefresh = onRefreshShowcase,
+            modifier = modifier,
+        )
     }
 }
 
@@ -99,7 +108,8 @@ fun HomeScreen(
     onSeeAll: () -> Unit,
     // --- Lab 9 · Task 2: ... ---
     onAbout: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onInterestsClick: () -> Unit = {}
 ) {
 
     //--- Class 7: Step 3: what's typed lives in state ---
@@ -216,6 +226,12 @@ fun HomeScreen(
             ) {
                 Text(text = "See all languages")
             }
+
+        Button(
+            onClick = onInterestsClick
+        ) {
+            Text("My Interests")
+        }
 
         // --- Lab 9 · Task 2: ... ---
         TextButton(
