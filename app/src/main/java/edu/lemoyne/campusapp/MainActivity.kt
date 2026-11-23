@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -34,15 +35,33 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.pm.ShortcutInfoCompat
 import edu.lemoyne.campusapp.ui.theme.CampusAppTheme
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import edu.lemoyne.campusapp.ui.theme.CampusAppTheme
 
 class MainActivity : ComponentActivity() {
+    private val showcaseViewModel: ShowcaseViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        showcaseViewModel.refresh()
         enableEdgeToEdge()
         setContent {
+            val showcaseState by showcaseViewModel.uiState.collectAsStateWithLifecycle()
+            showcaseViewModel
             CampusAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    CampusAppScreen(modifier = Modifier.padding(innerPadding))
+                    CampusAppScreen(
+                        showcaseUIState = showcaseState,
+                        onRefreshShowcase =  showcaseViewModel::refresh,
+                        modifier = Modifier.padding(innerPadding)
+                    )
                 }
             }
         }
